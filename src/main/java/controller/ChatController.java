@@ -66,7 +66,7 @@ public class ChatController extends HttpServlet {
         String prompt = message.content();
         String token = System.getenv("TOGETHER_API_KEY");
 //        String token = dotenv.get("TOGETHER_API_KEY");
-        logger.info(token);
+//        logger.info(token); // 이게 왜...
         String model = "stabilityai/stable-diffusion-xl-base-1.0";
         String model2 = "black-forest-labs/FLUX.1-schnell-Free";
         Random random = new Random();
