@@ -46,6 +46,17 @@ public class ChatController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8"); // 인코딩 변경
         resp.setCharacterEncoding("UTF-8"); // 인코딩 변경
+        // CORS 헤더 추가
+        resp.setHeader("Access-Control-Allow-Origin", "*");  // 모든 origin 허용
+        resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+
+        // preflight 요청 처리(OPTIONS 메소드 처리)
+        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         Message message = objectMapper.readValue(req.getInputStream(), Message.class);
 //      resp.getWriter().println("한글을 쓰면 고장남");
