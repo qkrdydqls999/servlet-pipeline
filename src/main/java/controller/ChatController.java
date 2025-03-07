@@ -24,4 +24,10 @@ public class ChatController extends HttpServlet {
         logger.info("서비스! 서비스!");
         res.getWriter().println("받아라!");
     }
+
+    @Override
+    public void destroy() {
+        logger.info("잘 가!");
+        super.destroy();
+    }
 }
