@@ -1,5 +1,7 @@
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -8,10 +10,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.logging.Logger;
 
 public class ChatController extends HttpServlet {
     final static Logger logger = Logger.getLogger(ChatController.class.getName());
+
     @Override
     public void init() throws ServletException {
         super.init();
@@ -39,7 +46,39 @@ public class ChatController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8"); // 인코딩 변경
         resp.setCharacterEncoding("UTF-8"); // 인코딩 변경
-        resp.getWriter().println("한글을 쓰면 고장남");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Message message = objectMapper.readValue(req.getInputStream(), Message.class);
+//        resp.getWriter().println("한글을 쓰면 고장남");
+        HttpClient client = HttpClient.newHttpClient();
+//        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+        String prompt = message.content();
+        String token = System.getenv("TOGETHER_API_KEY");
+//        String token = dotenv.get("TOGETHER_API_KEY");
+        logger.info(token);
+        String body = """
+                {
+                    "model": "black-forest-labs/FLUX.1-schnell-Free",
+                    "prompt": "%s",
+                    "width": 1024,
+                    "height": 768,
+                    "steps": 1,
+                    "n": 1
+                }
+                """.formatted(prompt);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.together.xyz/v1/images/generations"))
+                .POST(HttpRequest.BodyPublishers.ofString(body)).headers(
+                        "Authorization", "Bearer %s".formatted(token),
+                        "Content-Type", "application/json"
+                ).build();
+        String result = "";
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            result = response.body();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        resp.getWriter().println(result);
     }
 
     @Override
@@ -47,4 +86,8 @@ public class ChatController extends HttpServlet {
         logger.info("잘 가!");
         super.destroy();
     }
+}
+
+record Message(String content) {
+
 }
