@@ -66,16 +66,17 @@ public class ChatController extends HttpServlet {
         String token = System.getenv("TOGETHER_API_KEY");
 //        String token = dotenv.get("TOGETHER_API_KEY");
         logger.info(token);
+        String model = "stabilityai/stable-diffusion-xl-base-1.0";
         String body = """
                 {
-                    "model": "black-forest-labs/FLUX.1-schnell-Free",
+                    "model": "%s",
                     "prompt": "%s",
                     "width": 1024,
                     "height": 768,
                     "steps": 1,
                     "n": 1
                 }
-                """.formatted(prompt);
+                """.formatted(model, prompt);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.together.xyz/v1/images/generations"))
                 .POST(HttpRequest.BodyPublishers.ofString(body)).headers(
