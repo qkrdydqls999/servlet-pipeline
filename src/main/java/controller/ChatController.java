@@ -70,16 +70,17 @@ public class ChatController extends HttpServlet {
         String model = "stabilityai/stable-diffusion-xl-base-1.0";
         String model2 = "black-forest-labs/FLUX.1-schnell-Free";
         Random random = new Random();
+        double val = random.nextDouble();
         String body = """
                 {
                     "model": "%s",
                     "prompt": "%s",
                     "width": 1024,
                     "height": 768,
-                    "steps": 1,
+                    "steps": %d,
                     "n": 1
                 }
-                """.formatted(random.nextDouble() > 0.5 ? model : model2, prompt); // 확률적으로 반반 분산시켰다
+                """.formatted((val > 0.5 ? model : model2), prompt, val > 0.5 ? 40 : 4); // 확률적으로 반반 분산시켰다, 모델에 따라 다른 steps 수.
         try {
             Thread.sleep(5000); // 이렇게 된 이상 5초 대기 시킨다 진짜
         } catch (InterruptedException e) {
