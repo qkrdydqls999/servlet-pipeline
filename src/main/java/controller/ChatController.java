@@ -77,6 +77,11 @@ public class ChatController extends HttpServlet {
                     "n": 1
                 }
                 """.formatted(model, prompt);
+        try {
+            Thread.sleep(5000); // 이렇게 된 이상 5초 대기 시킨다 진짜
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.together.xyz/v1/images/generations"))
                 .POST(HttpRequest.BodyPublishers.ofString(body)).headers(
