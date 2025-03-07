@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Random;
 import java.util.logging.Logger;
 
 public class ChatController extends HttpServlet {
@@ -67,6 +68,8 @@ public class ChatController extends HttpServlet {
 //        String token = dotenv.get("TOGETHER_API_KEY");
         logger.info(token);
         String model = "stabilityai/stable-diffusion-xl-base-1.0";
+        String model2 = "black-forest-labs/FLUX.1-schnell-Free";
+        Random random = new Random();
         String body = """
                 {
                     "model": "%s",
@@ -76,7 +79,7 @@ public class ChatController extends HttpServlet {
                     "steps": 1,
                     "n": 1
                 }
-                """.formatted(model, prompt);
+                """.formatted(random.nextDouble() > 0.5 ? model : model2, prompt); // 확률적으로 반반 분산시켰다
         try {
             Thread.sleep(5000); // 이렇게 된 이상 5초 대기 시킨다 진짜
         } catch (InterruptedException e) {
