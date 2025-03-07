@@ -48,7 +48,7 @@ public class ChatController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8"); // 인코딩 변경
         ObjectMapper objectMapper = new ObjectMapper();
         Message message = objectMapper.readValue(req.getInputStream(), Message.class);
-//        resp.getWriter().println("한글을 쓰면 고장남");
+//      resp.getWriter().println("한글을 쓰면 고장남");
         HttpClient client = HttpClient.newHttpClient();
 //        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
         String prompt = message.content();

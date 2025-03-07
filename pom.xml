@@ -11,6 +11,7 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
   </properties>
+
   <dependencies>
     <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
     <dependency>
@@ -34,5 +35,13 @@
   </dependencies>
   <build>
     <finalName>ex09</finalName>
+<!--    <resources>-->
+<!--      <resource>-->
+<!--        <directory>src</directory>-->
+<!--        <includes>-->
+<!--          <include>.env</include>-->
+<!--        </includes>-->
+<!--      </resource>-->
+<!--    </resources>-->
   </build>
 </project>
